@@ -9,11 +9,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final Random random = new Random();
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(2))
@@ -25,11 +27,11 @@ public class Main {
     }
 
     private void start() throws IOException {
-        final HttpRequest httpRequest = HttpRequest.newBuilder().GET().uri(URI.create("http://192.168.68.117:7070/LICENSE")).build();
         final HttpServer localhost = HttpServer.create(new InetSocketAddress("0.0.0.0", 8080), 200);
         localhost.setExecutor(executor);
         localhost.createContext("/", exchange -> {
             try {
+                final HttpRequest httpRequest = HttpRequest.newBuilder().GET().uri(URI.create("http://192.168.68.117:7070/LICENSE?" + random.nextDouble())).build();
                 final HttpResponse<byte[]> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofByteArray());
                 exchange.sendResponseHeaders(httpResponse.statusCode(), httpResponse.body().length);
                 exchange.getResponseBody().write(httpResponse.body());
