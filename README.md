@@ -54,3 +54,13 @@ for i in {1..100}; do docker stats --no-stream | grep http-app ; done
 for i in {1..100}; do docker stats --no-stream | grep demo-app ; done
 ```
 
+
+# Test results
+
+![](img/response-time-ms.png)
+
+![](img/memory.png)
+
+![](img/cpu.png)
+
+
